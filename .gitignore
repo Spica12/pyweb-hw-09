@@ -1,0 +1,4 @@
+src-hw-08/__pycache__/
+.pytest_cache/
+.vscode/
+

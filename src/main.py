@@ -1,10 +1,12 @@
 import json
+import pathlib
+
 import scrapy
 from itemadapter import ItemAdapter
 from scrapy.crawler import CrawlerProcess
-from scrapy.item import Item, Field
-import re
+from scrapy.item import Field, Item
 
+DATA_DIR = pathlib.Path(__file__).parent.parent.joinpath("data")
 
 
 class QueteItem(Item):
@@ -23,6 +25,9 @@ class AuthorItem(Item):
 class DataPipLine:
     quotes = []
     authors = []
+    quotes_path = DATA_DIR / "quotes.json"
+    authors_path = DATA_DIR / "authors.json"
+
 
     def process_item(self, item, spider):
         adapter = ItemAdapter(item)
@@ -32,9 +37,9 @@ class DataPipLine:
             self.quotes.append(dict(adapter))
 
     def close_spider(self, spider):
-        with open("quotes.json", "w", encoding="utf-8") as fd:
+        with open(self.quotes_path, "w", encoding="utf-8") as fd:
             json.dump(self.quotes, fd, ensure_ascii=False, indent=2)
-        with open("authors.json", "w", encoding="utf-8") as fd:
+        with open(self.authors_path, "w", encoding="utf-8") as fd:
             json.dump(self.authors, fd, ensure_ascii=False, indent=2)
 
 
